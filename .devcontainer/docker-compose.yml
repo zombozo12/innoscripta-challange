@@ -1,12 +1,12 @@
 version: "3.8"
 services:
     db:
-        container_name: db_anlc-production
+        container_name: db_innoscripta-dev
         image: postgres:alpine
         restart: always
         environment:
-            POSTGRES_PASSWORD: s6VfVsVf!^EUA4X73G3^DCab
-            POSTGRES_DB: db_anlc
+            POSTGRES_PASSWORD: 8VYqHgGcfeN7!Vb2Ydmhkq#cZb3bZCM3
+            POSTGRES_DB: db_innoscripta
             POSTGRES_USER: root
         networks:
             - network_app
@@ -16,6 +16,8 @@ services:
             test: ["CMD", "mysqladmin", "ping", "--silent"]
             timeout: 20s
             retries: 3
+        ports:
+            - 5432:5432
 volumes:
     db_prod:
         driver: local
