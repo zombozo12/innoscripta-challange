@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
 
         try {
             $user = User::where('email', $email)->first();
-            if (!$user or !Hash::check($password, $user->password)) {
+            if (!$user and !Hash::check($password, $user->password)) {
                 return $response->setBadResponse([], ResponseAlias::HTTP_UNAUTHORIZED, "Email/password is incorrect.");
             }
         } catch (Exception $ex) {

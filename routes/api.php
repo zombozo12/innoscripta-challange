@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\NewsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,4 +19,8 @@ Route::prefix('auth')->group(function () {
     Route::post('in', [AuthenticationController::class, 'login']);
     Route::post('register', [AuthenticationController::class, 'register']);
     Route::get('out', [AuthenticationController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+});
+
+Route::prefix('news')->group(function () {
+    Route::get('all', [NewsController::class, 'GetAllNews'])->middleware('auth:sanctum');
 });
