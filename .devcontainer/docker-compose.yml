@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+    db:
+        container_name: db_anlc-production
+        image: postgres:alpine
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: s6VfVsVf!^EUA4X73G3^DCab
+            POSTGRES_DB: db_anlc
+            POSTGRES_USER: root
+        networks:
+            - network_app
+        volumes:
+            - db_prod:/var/lib/postgresql/data
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "--silent"]
+            timeout: 20s
+            retries: 3
+volumes:
+    db_prod:
+        driver: local
+networks:
+    network_app:
+        driver: host
