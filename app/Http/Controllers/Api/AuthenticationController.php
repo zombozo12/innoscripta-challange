@@ -25,6 +25,7 @@ class AuthenticationController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $response = new ApiResponse(now(), $request->fingerprint());
+
         // validate request
         $request->validated();
 
@@ -33,7 +34,7 @@ class AuthenticationController extends Controller
 
         try {
             $user = User::where('email', $email)->first();
-            if (!$user and !Hash::check($password, $user->password)) {
+            if (!($user and Hash::check($password, $user->password))) {
                 return $response->setBadResponse([], ResponseAlias::HTTP_UNAUTHORIZED, "Email/password is incorrect.");
             }
         } catch (Exception $ex) {
@@ -43,7 +44,6 @@ class AuthenticationController extends Controller
         }
 
         $token = $user->createToken('user-auth', [''])->plainTextToken;
-
         $split = explode('|', $token);
 
         $token_id = $split[0];
@@ -55,6 +55,20 @@ class AuthenticationController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $response = new ApiResponse(now(), $request->fingerprint());
+
+        $request->user()->currentAccessToken()->delete();
+        return $response->setOKResponse([
+            'logout' => 'OK'
+        ]);
+    }
 
     /**
      * @param RegisterRequest $request
@@ -76,6 +90,16 @@ class AuthenticationController extends Controller
             $user->name = $name;
             $user->email = $email;
             $user->password = Hash::make($password);
+            $user->settings = json_encode([
+                'theme' => 'dark'
+            ]);
+            $user->news_preferences = json_encode([
+                'language' => 'en',
+                'country' => 'us',
+                'sources' => [],
+                'categories' => [],
+                'authors' => [],
+            ]);
             $user->save();
         } catch (Exception $ex) {
             return $response->setBadResponse([
@@ -86,21 +110,6 @@ class AuthenticationController extends Controller
         return $response->setOKResponse([
             'user' => $user,
             'message' => 'Account has been created.'
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function logout(Request $request): JsonResponse
-    {
-        $response = new ApiResponse(now(), $request->fingerprint());
-
-        $request->user()->currentAccessToken()->delete();
-        return $response->setOKResponse([
-            'logout' => 'OK'
         ]);
     }
 }
