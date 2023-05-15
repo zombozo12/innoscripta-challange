@@ -25,6 +25,5 @@ Route::prefix('auth')->group(function () {
 Route::prefix('account')->middleware('auth:sanctum')->group(function () {
     Route::get('me', [AccountController::class, 'me']);
     Route::post('change-password', [AccountController::class, 'changePassword']);
-    Route::post('change-news-settings', [AccountController::class, 'changeNewsSettings']);
-    Route::post('change-account-settings', [AccountController::class, 'changeAccountSettings']);
+    Route::post('change-profile', [AccountController::class, 'changeProfile']);
 });

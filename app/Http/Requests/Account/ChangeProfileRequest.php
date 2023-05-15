@@ -5,7 +5,7 @@ namespace App\Http\Requests\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ChangeNewsPreferenceRequest extends FormRequest
+class ChangeProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,9 @@ class ChangeNewsPreferenceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'news_preference' => 'required|string',
+            'name' => 'required|string',
+            'news_preferences' => 'required',
+            'settings' => 'required',
         ];
     }
 }

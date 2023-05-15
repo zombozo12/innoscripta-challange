@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Account\ChangeAccountSettingsRequest;
-use App\Http\Requests\Account\ChangeNewsPreferenceRequest;
 use App\Http\Requests\Account\ChangePasswordRequest;
+use App\Http\Requests\Account\ChangeProfileRequest;
 use App\Http\Responses\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
@@ -56,38 +55,21 @@ class AccountController extends Controller
     /**
      * @throws Exception
      */
-    public function changeNewsSettings(ChangeNewsPreferenceRequest $request): JsonResponse
+    public function changeProfile(ChangeProfileRequest $request): JsonResponse
     {
         $response = new ApiResponse(now(), $request->fingerprint());
 
         $request->validated();
-
+        
         $user = $request->user();
-        $user->news_preferences = $request->json('news_preference');
+        $user->name = $request->json('name');
+        $user->settings = json_encode($request->json('settings'));
+        $user->news_preferences = json_encode($request->json('news_preferences'));
         $user->save();
 
         return $response->setOKResponse([
             'user' => $request->user(),
-            'message' => 'News preference changed successfully.'
-        ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function changeAccountSettings(ChangeAccountSettingsRequest $request): JsonResponse
-    {
-        $response = new ApiResponse(now(), $request->fingerprint());
-
-        $request->validated();
-
-        $user = $request->user();
-        $user->settings = $request->json('settings');
-        $user->save();
-
-        return $response->setOKResponse([
-            'user' => $request->user(),
-            'message' => 'Account settings changed successfully.'
+            'message' => 'Profile changed successfully.'
         ]);
     }
 }
