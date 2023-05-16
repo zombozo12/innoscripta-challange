@@ -23,10 +23,6 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     libpq-dev
 
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
-
-RUN apt-get update && apt-get install -y nodejs
-
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -67,8 +63,6 @@ WORKDIR $PWD
 # Copy app files
 COPY . .
 
-RUN npm install -g npm@latest
-
 RUN composer install --no-dev
 
 RUN cp .env.example .env
@@ -77,15 +71,6 @@ RUN php artisan key:generate
 
 # Chown app files
 # RUN chown -v -R $USER:www-data .
-RUN chown -R www-data:www-data .
-
-RUN npm install cross-env --unsafe-perm=true --allow-root
-
-RUN npm install --unsafe-perm=true --allow-root
-
-RUN npm audit fix --force; exit 0
-
-RUN npm run dev
 
 RUN chown -R www-data:www-data .
 
